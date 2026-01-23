@@ -201,7 +201,7 @@ body {
   width: 100%;
   padding-top: 133.33%; /* Mobile ratio (3:4 aspect ratio) */
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: transparent;
 }
 
 .product-image {
