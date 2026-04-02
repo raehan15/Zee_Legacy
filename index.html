@@ -1,334 +1,1420 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zee Legacy Perfumes</title>
+    <title>Collection – Zee Legacy Perfumes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles.css" />
     <style>
-      body,
-      html {
+      /* ─── Reset ─────────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
         margin: 0;
         padding: 0;
-        overflow-x: hidden;
-        background-color: transparent;
-      }
-      #canvas-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        z-index: 1;
-        background: linear-gradient(135deg, #ffe6fa 0%, #e6f7ff 100%);
-      }
-      .scroll-section {
-        height: 100vh;
-        width: 100%;
-        position: relative;
-        pointer-events: none;
-        z-index: 0;
-      }
-      .overlay-text {
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        font-family: "Playfair Display", serif;
-        font-size: 3.5rem;
-        color: #1a1a1a;
-        opacity: 0;
-        pointer-events: none;
-        width: 35%;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        line-height: 1.2;
-        z-index: 2;
+        box-sizing: border-box;
       }
 
-      /* Alternating positions */
-      #text1 {
-        left: 10%;
-        text-align: left;
+      :root {
+        --gold: #c9a84c;
+        --gold-light: #e8c96d;
+        --dark: #1a1a1a;
+        --mid: #555;
+        --light: #f9f6f0;
+        --white: #ffffff;
+        --nav-h: 72px;
       }
-      #text2 {
-        left: 10%;
-        text-align: left;
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--white);
+        color: var(--dark);
+        min-height: 100vh;
       }
-      #text3 {
-        right: 10%;
-        text-align: right;
+
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: var(--gold) var(--light);
       }
-      #text4 {
-        right: 10%;
-        text-align: right;
+
+      ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
       }
-      #text5 {
-        left: 10%;
-        text-align: left;
+
+      ::-webkit-scrollbar-track {
+        background: var(--light);
       }
-      .highlight {
-        color: #d4af37;
-        display: block;
-        font-size: 4rem;
-        margin-top: 10px;
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+          180deg,
+          var(--gold-light) 0%,
+          var(--gold) 100%
+        );
+        border-radius: 999px;
+        border: 3px solid var(--light);
       }
-      .shop-btn-container {
-        position: fixed;
-        bottom: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 0;
-        pointer-events: auto;
-        z-index: 10;
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #d8b85a 0%, #b9902f 100%);
       }
-      .shop-btn {
-        padding: 20px 60px;
-        font-size: 1.2rem;
-        background: transparent;
-        color: #d4af37;
-        border: 2px solid #d4af37;
-        cursor: pointer;
-        font-family: "Playfair Display", serif;
-        text-decoration: none;
-        transition: all 0.4s ease;
+
+      /* ─── TOP ANNOUNCEMENT BAR ──────────────────────────────── */
+      .announcement-bar {
+        background: var(--dark);
+        color: var(--white);
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 0.78rem;
         letter-spacing: 2px;
         text-transform: uppercase;
-        position: relative;
-        overflow: hidden;
+        font-weight: 500;
       }
-      .shop-btn:hover {
-        background: #d4af37;
-        color: #fff;
-        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
-      }
-      .brand-name {
-        position: fixed;
-        top: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-        font-family: "Playfair Display", serif;
-        font-size: 5rem;
-        color: #1a1a1a;
-        opacity: 0;
-        pointer-events: none;
-        z-index: 10;
-        letter-spacing: 5px;
-        text-transform: uppercase;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        /* Reset styles from external CSS that cause visibility issues */
-        background: none;
-        -webkit-background-clip: initial;
-        -webkit-text-fill-color: initial;
-        background-clip: initial;
+      .announcement-bar a {
+        color: var(--gold-light);
+        text-decoration: none;
+        margin-left: 8px;
+        font-weight: 600;
       }
 
-      /* Loading Screen */
-      #loader {
-        position: fixed;
+      /* ─── NAVBAR ────────────────────────────────────────────── */
+      .navbar {
+        position: sticky;
         top: 0;
+        width: 100%;
+        z-index: 900;
+        background: var(--white);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        height: var(--nav-h);
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
+      }
+
+      .nav-inner {
+        width: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: var(--dark);
+        font-size: 0.72rem;
+        letter-spacing: 2.4px;
+        text-transform: uppercase;
+        font-weight: 600;
+        position: relative;
+        transition: color 0.25s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
         left: 0;
+        bottom: -6px;
+        width: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: width 0.25s;
+      }
+      .nav-link:hover {
+        color: var(--gold);
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: var(--gold);
+      }
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-brand {
+        text-align: center;
+      }
+      .brand-logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        gap: 2px;
+      }
+      .brand-top {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--mid);
+        font-weight: 400;
+      }
+      .brand-main {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, var(--dark) 0%, var(--gold) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+      }
+      .brand-sub {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.65rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 22px;
+      }
+
+      .nav-icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dark);
+        transition: color 0.25s;
+      }
+      .nav-icon-btn:hover {
+        color: var(--gold);
+      }
+      .nav-icon-btn svg {
+        width: 21px;
+        height: 21px;
+        fill: currentColor;
+      }
+
+      .cart-wrapper {
+        position: relative;
+      }
+      .cart-badge {
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        background: var(--gold);
+        color: white;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        font-size: 0.65rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+      }
+
+      /* ─── PAGE HEADER ───────────────────────────────────────── */
+      .page-hero {
+        background: var(--light);
+        padding: 60px 40px 50px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      }
+
+      .page-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.2rem, 4vw, 3.8rem);
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--dark);
+        margin-bottom: 14px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--mid);
+      }
+      .breadcrumb a {
+        color: var(--mid);
+        text-decoration: none;
+        transition: color 0.25s;
+      }
+      .breadcrumb a:hover {
+        color: var(--gold);
+      }
+      .breadcrumb span {
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      .hero-divider {
+        width: 60px;
+        height: 1px;
+        background: var(--gold);
+        margin: 20px auto 0;
+        opacity: 0.6;
+      }
+
+      /* ─── MAIN CONTENT ──────────────────────────────────────── */
+      .main {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 50px 40px 80px;
+      }
+
+      .collections-stack {
+        display: block;
+      }
+
+      .collection-block {
+        margin-bottom: 48px;
+      }
+
+      .collection-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.35rem, 2.2vw, 2rem);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--dark);
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+      }
+
+      /* ─── PRODUCTS GRID ─────────────────────────────────────── */
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+
+      /* ─── PRODUCT CARD ──────────────────────────────────────── */
+      .product-card {
+        padding: 24px 20px 32px;
+        text-align: center;
+        border: 1px solid transparent;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s;
+        cursor: pointer;
+        position: relative;
+      }
+      .product-card:hover {
+        border-color: rgba(201, 168, 76, 0.15);
+        box-shadow: 0 6px 40px rgba(0, 0, 0, 0.07);
+        z-index: 1;
+      }
+
+      /* Product name above image */
+      .card-name {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+
+      /* Notes below name */
+      .card-notes {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 0.95rem;
+        color: var(--mid);
+        font-style: italic;
+        margin-bottom: 18px;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+      }
+
+      /* Image container with hover swap */
+      .card-image-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 3/4;
+        overflow: hidden;
+        background: var(--light);
+        margin-bottom: 20px;
+      }
+
+      .card-img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #ffe6fa 0%, #e6f7ff 100%);
-        z-index: 9999;
+        object-fit: cover;
+        transition: opacity 0.45s ease;
+      }
+      .card-img.primary {
+        opacity: 1;
+      }
+      .card-img.secondary {
+        opacity: 0;
+      }
+
+      .card-image-wrap:hover .card-img.primary {
+        opacity: 0;
+      }
+      .card-image-wrap:hover .card-img.secondary {
+        opacity: 1;
+      }
+
+      /* Quick add overlay */
+      .quick-add-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(26, 26, 26, 0.88);
+        color: var(--white);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 14px;
+        transform: translateY(100%);
+        transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
         display: flex;
-        justify-content: center;
+        gap: 10px;
         align-items: center;
-        flex-direction: column;
-        transition: opacity 0.5s;
+        justify-content: center;
       }
-      .loader-text {
-        font-family: "Playfair Display", serif;
-        font-size: 1.5rem;
-        margin-top: 20px;
-        color: #d4af37;
+      .card-image-wrap:hover .quick-add-overlay {
+        transform: translateY(0);
+      }
+      .quick-add-overlay button {
+        background: none;
+        border: none;
+        color: var(--white);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: "Montserrat", sans-serif;
+        flex: 1;
+        padding: 6px 0;
+        transition: color 0.2s;
+      }
+      .quick-add-overlay button:hover {
+        color: var(--gold-light);
+      }
+      .quick-divider {
+        width: 1px;
+        height: 16px;
+        background: rgba(255, 255, 255, 0.3);
+        flex-shrink: 0;
+      }
+
+      /* Below-image info */
+      .card-footer {
+        text-align: center;
+      }
+
+      /* Price */
+      .card-price-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .price-from {
+        font-size: 0.68rem;
+        font-weight: 600;
         letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--mid);
       }
-      .scroll-indicator {
+      .price-original {
+        font-size: 0.85rem;
+        color: #bbb;
+        text-decoration: line-through;
+        font-family: "Cormorant Garamond", serif;
+      }
+      .price-sale {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      /* ─── CART DRAWER ───────────────────────────────────────── */
+      .cart-drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s;
+      }
+      .cart-drawer-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .cart-drawer {
+        position: fixed;
+        top: 0;
+        right: -460px;
+        width: min(460px, 100vw);
+        height: 100%;
+        background: var(--white);
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.12);
+      }
+      .cart-drawer.open {
+        right: 0;
+      }
+
+      .drawer-head {
+        padding: 28px 30px;
+        border-bottom: 1px solid #f0ebe0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+      }
+      .drawer-head h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--dark);
+      }
+      .drawer-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.6rem;
+        color: var(--mid);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+      }
+      .drawer-close:hover {
+        color: var(--gold);
+      }
+
+      .drawer-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 30px;
+      }
+
+      .drawer-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--mid);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        font-style: italic;
+      }
+
+      .drawer-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0ebe0;
+      }
+      .drawer-item img {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border: 1px solid #f0ebe0;
+        flex-shrink: 0;
+      }
+      .drawer-item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .drawer-item-name {
+        font-family: "Playfair Display", serif;
+        font-size: 0.95rem;
+        color: var(--dark);
+        margin-bottom: 4px;
+      }
+      .drawer-item-price {
+        font-size: 0.85rem;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .drawer-qty {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .qty-btn {
+        width: 26px;
+        height: 26px;
+        border: 1px solid #e0e0e0;
+        background: var(--white);
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .qty-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .qty-num {
+        font-size: 0.9rem;
+        font-weight: 600;
+        min-width: 20px;
+        text-align: center;
+      }
+      .drawer-remove {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #ccc;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        align-self: flex-start;
+        transition: color 0.2s;
+      }
+      .drawer-remove:hover {
+        color: #e74c3c;
+      }
+
+      .drawer-foot {
+        padding: 24px 30px 30px;
+        border-top: 1px solid #f0ebe0;
+        flex-shrink: 0;
+      }
+      .drawer-subtotal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .drawer-subtotal span:first-child {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--mid);
+      }
+      .drawer-subtotal span:last-child {
+        font-family: "Playfair Display", serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .drawer-checkout-btn {
+        display: block;
+        width: 100%;
+        padding: 17px;
+        background: var(--dark);
+        color: var(--gold-light);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-bottom: 12px;
+      }
+      .drawer-checkout-btn:hover {
+        background: var(--gold);
+        color: var(--white);
+      }
+      .drawer-continue-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: transparent;
+        color: var(--mid);
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        border: 1px solid #e0e0e0;
+        cursor: pointer;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        transition: all 0.25s;
+      }
+      .drawer-continue-btn:hover {
+        border-color: var(--dark);
+        color: var(--dark);
+      }
+
+      /* ─── TOAST ─────────────────────────────────────────────── */
+      .toast {
         position: fixed;
         bottom: 30px;
         left: 50%;
-        transform: translateX(-50%);
-        font-family: "Playfair Display", serif;
-        font-size: 1rem;
-        color: #1a1a1a;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--dark);
+        color: var(--white);
+        padding: 14px 28px;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+        z-index: 2000;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        pointer-events: none;
+        white-space: nowrap;
+        border-left: 3px solid var(--gold);
+      }
+      .toast.show {
         opacity: 1;
-        z-index: 10;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* ─── FOOTER ────────────────────────────────────────────── */
+      .footer {
+        background: var(--dark);
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 0.78rem;
         letter-spacing: 2px;
         text-transform: uppercase;
-        animation: bounce 2s infinite;
-        pointer-events: none;
       }
-      @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateX(-50%) translateY(0);
-        }
-        40% {
-          transform: translateX(-50%) translateY(-10px);
-        }
-        60% {
-          transform: translateX(-50%) translateY(-5px);
-        }
+      .footer a {
+        color: var(--gold-light);
+        text-decoration: none;
+      }
+      .footer-brand {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--white);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
       }
 
-      /* Responsive Styles */
-      @media (max-width: 1024px) {
-        .overlay-text {
-          font-size: 2.8rem;
-          width: 45%;
-        }
-        .highlight {
-          font-size: 3.2rem;
-        }
-        .brand-name {
-          font-size: 4rem;
+      /* ─── RESPONSIVE ────────────────────────────────────────── */
+      @media (max-width: 1100px) {
+        .products-grid {
+          grid-template-columns: repeat(3, 1fr);
         }
       }
-
       @media (max-width: 768px) {
-        .overlay-text {
-          font-size: 2rem;
-          width: 80%;
-          left: 50% !important;
-          right: auto !important;
-          transform: translateX(-50%) translateY(-50%);
-          text-align: center !important;
+        .navbar {
           padding: 0 20px;
-          box-sizing: border-box;
         }
-        .highlight {
-          font-size: 2.4rem;
+        .nav-left {
+          gap: 16px;
         }
-        .brand-name {
-          font-size: 2.5rem;
-          letter-spacing: 3px;
-          width: 90%;
-          text-align: center;
-        }
-        .shop-btn-container {
-          width: 80%;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-        .shop-btn {
-          padding: 15px 40px;
-          font-size: 1rem;
-          display: block;
-          text-align: center;
-          white-space: nowrap;
-        }
-        .scroll-indicator {
-          font-size: 0.85rem;
-          bottom: 20px;
-          width: 90%;
-          text-align: center;
-        }
-        .loader-text {
-          font-size: 1.2rem;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .overlay-text {
-          font-size: 1.6rem;
-          width: 90%;
-          padding: 0 15px;
-        }
-        .highlight {
-          font-size: 1.9rem;
-          margin-top: 8px;
-        }
-        .brand-name {
-          font-size: 2rem;
-          letter-spacing: 2px;
-          top: 12%;
-        }
-        .shop-btn-container {
-          width: 85%;
-          bottom: 12%;
-        }
-        .shop-btn {
-          padding: 14px 30px;
-          font-size: 0.9rem;
+        .nav-link {
+          font-size: 0.68rem;
           letter-spacing: 1.5px;
         }
-        .scroll-indicator {
-          font-size: 0.75rem;
-          bottom: 15px;
+        .main {
+          padding: 30px 16px 60px;
+        }
+        .page-hero {
+          padding: 40px 20px 35px;
+        }
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .brand-main {
+          font-size: 1.25rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .nav-left {
+          display: none;
+        }
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .card-name {
+          font-size: 0.78rem;
+          letter-spacing: 1.5px;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Loading Screen -->
-    <div id="loader">
-      <div class="loader-text">Loading Experience...</div>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+      Crafted from 100% Organic Oils &mdash; No Chemicals, No Compromise
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="order2.html">Order Now &rarr;</a>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div id="scrollIndicator" class="scroll-indicator">
-      Scroll to Experience
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <!-- Left links -->
+        <div class="nav-left">
+          <a href="index.html" class="nav-link active">Collection</a>
+          <a href="order2.html" class="nav-link">Order</a>
+          <a href="shipping-info.html" class="nav-link">Shipping</a>
+          <a href="return-exchange.html" class="nav-link">Returns</a>
+        </div>
+
+        <!-- Brand centre -->
+        <div class="nav-brand">
+          <a href="/" class="brand-logo">
+            <span class="brand-top">Est. 2024</span>
+            <span class="brand-main">Zee Legacy</span>
+            <span class="brand-sub">Perfumes</span>
+          </a>
+        </div>
+
+        <!-- Right icons -->
+        <div class="nav-right">
+          <!-- WhatsApp -->
+          <a
+            href="https://wa.me/923295460498"
+            target="_blank"
+            class="nav-icon-btn"
+            title="WhatsApp"
+          >
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              />
+            </svg>
+          </a>
+
+          <!-- Cart -->
+          <div
+            class="cart-wrapper nav-icon-btn"
+            onclick="openCart()"
+            style="cursor: pointer"
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 14.1 5.9 15 7 15h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0020 3H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"
+              />
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <h1>Our Collection</h1>
+      <div class="breadcrumb">
+        <span>Collection</span>
+      </div>
+      <div class="hero-divider"></div>
     </div>
 
-    <!-- Navbar Removed -->
+    <!-- Products Grid -->
+    <main class="main">
+      <div class="collections-stack" id="productsGrid"></div>
+    </main>
 
-    <div id="canvas-container"></div>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-brand">Zee Legacy</div>
+      <p>
+        &copy; 2025 Zee Legacy Perfumes. All rights reserved. &nbsp;|&nbsp;
+        <a href="order2.html">Place an Order</a> &nbsp;|&nbsp;
+        <a href="shipping-info.html">Shipping</a> &nbsp;|&nbsp;
+        <a href="return-exchange.html">Returns</a> &nbsp;|&nbsp;
+        <a href="https://wa.me/923295460498">WhatsApp Us</a>
+      </p>
+    </footer>
 
-    <!-- Scroll Sections (Invisible triggers) -->
-    <div class="scroll-section" id="section1"></div>
-    <div class="scroll-section" id="section2"></div>
-    <div class="scroll-section" id="section3"></div>
-    <div class="scroll-section" id="section4"></div>
-    <div class="scroll-section" id="section5"></div>
-    <div class="scroll-section" id="section6"></div>
+    <!-- Cart Drawer Overlay -->
+    <div
+      class="cart-drawer-overlay"
+      id="cartOverlay"
+      onclick="closeCart()"
+    ></div>
 
-    <!-- Text Overlays -->
-    <div class="overlay-text" id="text1">Experience True Luxury</div>
+    <!-- Cart Drawer -->
+    <aside class="cart-drawer" id="cartDrawer">
+      <div class="drawer-head">
+        <h2>Your Cart</h2>
+        <button class="drawer-close" onclick="closeCart()">&times;</button>
+      </div>
+      <div class="drawer-items" id="drawerItems"></div>
+      <div class="drawer-foot" id="drawerFoot" style="display: none">
+        <div class="drawer-subtotal">
+          <span>Subtotal</span>
+          <span id="drawerTotal">PKR 0</span>
+        </div>
+        <button
+          class="drawer-checkout-btn"
+          onclick="window.location.href = 'order2.html'"
+        >
+          Proceed to Order
+        </button>
+        <button class="drawer-continue-btn" onclick="closeCart()">
+          Continue Shopping
+        </button>
+      </div>
+    </aside>
 
-    <div class="overlay-text" id="text2">
-      Many perfumes use harmful
-      <span class="highlight">Chemical Fixatives</span>
-    </div>
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
-    <div class="overlay-text" id="text3">
-      We are different.
-      <span class="highlight">100% Chemical Free</span>
-    </div>
+    <script>
+      /* ── Product Data ──────────────────────────────────────── */
+      const products = [
+        {
+          id: 1,
+          collection: "50 ml collection",
+          name: "Velvet Bloom",
+          notes: "Rose, Jasmine, Vanilla",
+          description:
+            "A luxurious floral fragrance that captures the essence of blooming flowers in spring.",
+          originalPrice: "PKR 3,750",
+          originalNum: 3750,
+          price: "PKR 3,399",
+          priceNum: 3399,
+          stars: 5,
+          images: ["images/vb1.jpeg", "images/vb2.jpeg", "images/vb3.jpeg"],
+        },
+        {
+          id: 2,
+          collection: "50 ml collection",
+          name: "Oud Noor",
+          notes: "Oud, Amber, Cedar",
+          description:
+            "Rich and captivating Oud fragrance that radiates warmth and sophistication.",
+          originalPrice: "PKR 3,699",
+          originalNum: 3699,
+          price: "PKR 3,199",
+          priceNum: 3199,
+          stars: 4,
+          images: ["images/on1.jpeg", "images/on2.jpeg", "images/on3.jpeg"],
+        },
+        {
+          id: 3,
+          collection: "50 ml collection",
+          name: "Strong With You",
+          notes: "Cardamom, Chestnut, Vanilla",
+          description:
+            "A charismatic and addictive fragrance with spicy accords and sweet warmth.",
+          originalPrice: "PKR 3,999",
+          originalNum: 3999,
+          price: "PKR 3,599",
+          priceNum: 3599,
+          stars: 5,
+          images: ["images/swy1.jpeg", "images/swy2.jpeg", "images/swy3.jpeg"],
+        },
+        {
+          id: 5,
+          collection: "50 ml collection",
+          name: "Midnight Valor",
+          notes: "Leather, Amber, Dark Woods",
+          description:
+            "Intense and mysterious — a fragrance for the bold who thrive after dark.",
+          originalPrice: "PKR 3,750",
+          originalNum: 3750,
+          price: "PKR 3,099",
+          priceNum: 3099,
+          stars: 4,
+          images: ["images/mv1.jpeg", "images/mv2.jpeg", "images/mv3.jpeg"],
+        },
+        {
+          id: 4,
+          collection: "50 ml collection",
+          name: "Executive Aura",
+          notes: "Citrus, Spice, Sandalwood",
+          description:
+            "Designed for the modern leader — crisp citrus meets aromatic spices and solid wood.",
+          originalPrice: "PKR 4,799",
+          originalNum: 4799,
+          price: "PKR 4,499",
+          priceNum: 4499,
+          stars: 5,
+          images: ["images/ea1.jpeg", "images/ea2.jpeg", "images/ea3.jpeg"],
+        },
+        {
+          id: 6,
+          collection: "35 ml collection",
+          name: "Inspired by Sauvage Dior",
+          notes: "Bergamot, Pepper, Ambroxan",
+          description:
+            "Fresh and assertive profile with crisp citrus and a clean woody trail.",
+          originalPrice: "PKR 1,699",
+          originalNum: 1699,
+          price: "PKR 1,399",
+          priceNum: 1399,
+          stars: 5,
+          images: ["images/sd1.jpeg", "images/sd2.jpeg", "images/sd3.jpeg"],
+        },
+        {
+          id: 7,
+          collection: "35 ml collection",
+          name: "Inspired by Erba Pura",
+          notes: "Citrus, Fruits, Musk",
+          description:
+            "Vibrant fruity musk impression that feels bright, modern, and long lasting.",
+          originalPrice: "PKR 1,699",
+          originalNum: 1699,
+          price: "PKR 1,399",
+          priceNum: 1399,
+          stars: 5,
+          images: ["images/ep1.jpeg", "images/ep2.jpeg", "images/ep3.jpeg"],
+        },
+        {
+          id: 8,
+          collection: "35 ml collection",
+          name: "Inspired by Gucci Flora",
+          notes: "Peony, Rose, Citrus",
+          description:
+            "Elegant floral feel with soft brightness suited for daily wear.",
+          originalPrice: "PKR 1,699",
+          originalNum: 1699,
+          price: "PKR 1,399",
+          priceNum: 1399,
+          stars: 4,
+          images: ["images/gf1.jpeg", "images/gf2.jpeg", "images/gf3.jpeg"],
+        },
+        {
+          id: 9,
+          collection: "35 ml collection",
+          name: "Inspired by Bleu de Chanel",
+          notes: "Grapefruit, Incense, Cedar",
+          description:
+            "Clean aromatic woods profile with a smooth, premium masculine character.",
+          originalPrice: "PKR 1,699",
+          originalNum: 1699,
+          price: "PKR 1,399",
+          priceNum: 1399,
+          stars: 5,
+          images: ["images/bdc1.jpeg", "images/bdc2.jpeg", "images/bdc3.jpeg"],
+        },
+        {
+          id: 10,
+          collection: "35 ml collection",
+          name: "Inspired by Aventus Creed",
+          notes: "Pineapple, Birch, Musk",
+          description:
+            "Bold fruity-smoky blend built for projection, confidence, and performance.",
+          originalPrice: "PKR 1,699",
+          originalNum: 1699,
+          price: "PKR 1,399",
+          priceNum: 1399,
+          stars: 5,
+          images: ["images/ac1.jpeg", "images/ac2.jpeg", "images/ac3.jpeg"],
+        },
+        {
+          id: 11,
+          collection: "Ouds",
+          name: "Versace Bright",
+          notes: "Citrus, Woods",
+          description:
+            "Fresh bright character with clean citrus facets and a smooth woody finish.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/ovb1.jpeg", "images/ovb2.jpeg"],
+        },
+        {
+          id: 12,
+          collection: "Ouds",
+          name: "Havoc",
+          notes: "Spice, Amber",
+          description:
+            "A bold modern profile with energetic top notes and warm depth.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/oh1.jpeg", "images/oh2.jpeg"],
+        },
+        {
+          id: 13,
+          collection: "Ouds",
+          name: "Shay Oudh",
+          notes: "Oud, Musk",
+          description:
+            "Soft oud signature balanced with gentle spice and refined sweetness.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/oso1.jpeg", "images/oso2.jpeg"],
+        },
+        {
+          id: 14,
+          collection: "Ouds",
+          name: "Sauvage Dior",
+          notes: "Bergamot, Pepper",
+          description:
+            "Crisp aromatic intensity with strong projection and lasting freshness.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/osd1.jpeg", "images/osd2.jpeg"],
+        },
+        {
+          id: 15,
+          collection: "Ouds",
+          name: "Gucci Rush",
+          notes: "Sweet, Spice",
+          description:
+            "A vibrant expressive scent with sweet spice and creamy undertones.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/ogr1.jpeg", "images/ogr2.jpeg"],
+        },
+        {
+          id: 16,
+          collection: "Ouds",
+          name: "Al Faris",
+          notes: "Woods, Amber",
+          description: "Classic eastern feel with rich woods and amber warmth.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/oaf1.jpeg", "images/oaf2.jpeg"],
+        },
+        {
+          id: 17,
+          collection: "Ouds",
+          name: "Bleu D Channel",
+          notes: "Citrus, Cedar",
+          description:
+            "Clean masculine style with bright citrus and smoky woody layers.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/obdc1.jpeg", "images/obdc2.jpeg"],
+        },
+        {
+          id: 18,
+          collection: "Ouds",
+          name: "Tea Rose",
+          notes: "Rose, Musk",
+          description:
+            "Delicate rose-forward composition with soft musky nuance.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/otr1.jpeg", "images/otr2.jpeg"],
+        },
+        {
+          id: 19,
+          collection: "Ouds",
+          name: "Boom Shell",
+          notes: "Fruity, Woods",
+          description:
+            "Striking character with sweet fruity lift over warm woods.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/obs1.jpeg", "images/obs2.jpeg"],
+        },
+        {
+          id: 20,
+          collection: "Ouds",
+          name: "Dunhill Desire",
+          notes: "Spice, Amber",
+          description:
+            "Smooth and confident blend with spicy facets and amber base.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/odd1.jpeg", "images/odd2.jpeg"],
+        },
+        {
+          id: 21,
+          collection: "Ouds",
+          name: "White Oudh",
+          notes: "Oud, Floral",
+          description:
+            "A lighter oud expression with airy florals and creamy woods.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/owo1.jpeg", "images/owo2.jpeg"],
+        },
+        {
+          id: 22,
+          collection: "Ouds",
+          name: "Jannan J.",
+          notes: "Oriental, Musk",
+          description:
+            "Elegant oriental profile with subtle spice and refined musk.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/ojj1.jpeg", "images/ojj2.jpeg"],
+        },
+        {
+          id: 23,
+          collection: "Ouds",
+          name: "Zarrar J.",
+          notes: "Woody, Amber",
+          description:
+            "A deep sophisticated tone with woody warmth and smooth finish.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/ozj1.jpeg", "images/ozj2.jpeg"],
+        },
+        {
+          id: 24,
+          collection: "Ouds",
+          name: "Gucci Flora",
+          notes: "Floral, Citrus",
+          description:
+            "Floral brightness wrapped in a soft musky trail for daily wear.",
+          originalPrice: "PKR 999",
+          originalNum: 999,
+          price: "PKR 599",
+          priceNum: 599,
+          stars: 5,
+          images: ["images/ogf1.jpeg", "images/ogf2.jpeg"],
+        },
+      ];
 
-    <div class="overlay-text" id="text4">
-      Crafted from the finest
-      <span class="highlight">Organic Oils</span>
-    </div>
+      /* ── Cart ──────────────────────────────────────────────── */
+      let cartItems = JSON.parse(localStorage.getItem("zlCart2") || "[]");
 
-    <div class="overlay-text" id="text5">
-      Pure Scent.
-      <span class="highlight">Unmatched Quality.</span>
-    </div>
+      function saveCart() {
+        localStorage.setItem("zlCart2", JSON.stringify(cartItems));
+        updateBadge();
+      }
 
-    <!-- Brand Name -->
-    <div id="brandName" class="brand-name">Zee Legacy</div>
+      function updateBadge() {
+        const badge = document.getElementById("cartBadge");
+        const total = cartItems.reduce((s, i) => s + i.qty, 0);
+        badge.textContent = total;
+        badge.style.display = total > 0 ? "flex" : "none";
+      }
 
-    <!-- Shop Button -->
-    <div class="shop-btn-container" id="shopBtnContainer">
-      <a href="shop.html" class="shop-btn">Shop Now</a>
-    </div>
+      function addToCart(id) {
+        const product = products.find((p) => p.id === id);
+        if (!product) return;
+        const existing = cartItems.find((i) => i.id === id);
+        if (existing) existing.qty++;
+        else
+          cartItems.push({
+            id,
+            name: product.name,
+            price: product.price,
+            priceNum: product.priceNum,
+            image: product.images[0],
+            qty: 1,
+          });
+        saveCart();
+        showToast(`${product.name} added to cart`);
+        renderDrawer();
+      }
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="js/3d-scene.js"></script>
+      function updateQty(id, delta) {
+        const item = cartItems.find((i) => i.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) cartItems = cartItems.filter((i) => i.id !== id);
+        saveCart();
+        renderDrawer();
+      }
+
+      function removeItem(id) {
+        cartItems = cartItems.filter((i) => i.id !== id);
+        saveCart();
+        renderDrawer();
+      }
+
+      function getCartTotal() {
+        return cartItems.reduce((s, i) => s + i.priceNum * i.qty, 0);
+      }
+
+      /* ── Drawer ────────────────────────────────────────────── */
+      function openCart() {
+        document.getElementById("cartDrawer").classList.add("open");
+        document.getElementById("cartOverlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+        renderDrawer();
+      }
+
+      function closeCart() {
+        document.getElementById("cartDrawer").classList.remove("open");
+        document.getElementById("cartOverlay").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      function renderDrawer() {
+        const el = document.getElementById("drawerItems");
+        const foot = document.getElementById("drawerFoot");
+        const totalEl = document.getElementById("drawerTotal");
+
+        if (cartItems.length === 0) {
+          el.innerHTML = `<div class="drawer-empty">Your cart is empty.<br>Discover your signature scent above.</div>`;
+          foot.style.display = "none";
+          return;
+        }
+
+        el.innerHTML = cartItems
+          .map(
+            (item) => `
+          <div class="drawer-item">
+            <img src="${item.image}" alt="${item.name}">
+            <div class="drawer-item-info">
+              <div class="drawer-item-name">${item.name}</div>
+              <div class="drawer-item-price">${item.price}</div>
+              <div class="drawer-qty">
+                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+                <span class="qty-num">${item.qty}</span>
+                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+              </div>
+            </div>
+            <button class="drawer-remove" onclick="removeItem(${item.id})" title="Remove">&times;</button>
+          </div>
+        `,
+          )
+          .join("");
+
+        const total = getCartTotal();
+        totalEl.textContent = `PKR ${total.toLocaleString()}`;
+        foot.style.display = "block";
+      }
+
+      /* ── Toast ─────────────────────────────────────────────── */
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      /* ── Render products ────────────────────────────────────── */
+      function renderProducts() {
+        const grid = document.getElementById("productsGrid");
+        const waBase = "https://wa.me/923295460498?text=";
+
+        const collections = ["50 ml collection", "35 ml collection", "Ouds"];
+
+        grid.innerHTML = collections
+          .map((collectionName) => {
+            const sectionProducts = products.filter(
+              (p) => p.collection === collectionName,
+            );
+
+            if (sectionProducts.length === 0) {
+              return "";
+            }
+
+            const cardsHtml = sectionProducts
+              .map((p) => {
+                const waMsg = encodeURIComponent(
+                  `Assalam o Alaikum! 👋\nMain Zee Legacy website par perfumes dekh raha hoon. Mujhe ${p.name} lena hai — please guide karein.`,
+                );
+                const waLink = waBase + waMsg;
+                return `
+          <div class="product-card">
+            <!-- Name + Notes above image -->
+            <div class="card-name">${p.name}</div>
+            <div class="card-notes">${p.notes}</div>
+
+            <!-- Image with hover swap -->
+            <div class="card-image-wrap">
+              <img class="card-img primary"   src="${p.images[0]}" alt="${p.name}" loading="lazy">
+              <img class="card-img secondary" src="${p.images[1]}" alt="${p.name} – alternate view" loading="lazy">
+              <!-- Quick-add overlay -->
+              <div class="quick-add-overlay">
+                <button onclick="addToCart(${p.id})">Add to Cart</button>
+                <div class="quick-divider"></div>
+                <button onclick="window.open('${waLink}','_blank')">WhatsApp</button>
+              </div>
+            </div>
+
+            <!-- Below-image info -->
+            <div class="card-footer">
+              <div class="card-price-row">
+                <span class="price-from">From</span>
+                <span class="price-original">${p.originalPrice}</span>
+                <span class="price-sale">${p.price}</span>
+              </div>
+            </div>
+          </div>
+          `;
+              })
+              .join("");
+
+            return `
+              <section class="collection-block">
+                <h2 class="collection-title">${collectionName}</h2>
+                <div class="products-grid">${cardsHtml}</div>
+              </section>
+            `;
+          })
+          .join("");
+      }
+
+      /* ── Init ───────────────────────────────────────────────── */
+      document.addEventListener("DOMContentLoaded", () => {
+        renderProducts();
+        updateBadge();
+      });
+    </script>
   </body>
 </html>

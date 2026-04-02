@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,6 +22,30 @@
         background: linear-gradient(135deg, #ffe6fa 0%, #e6f7ff 100%);
         min-height: 100vh;
         color: #1a1a1a;
+      }
+
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: #d4af37 #f9f6f0;
+      }
+
+      ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f9f6f0;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #f4c542 0%, #d4af37 100%);
+        border-radius: 999px;
+        border: 3px solid #f9f6f0;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #e0b93f 0%, #b9902f 100%);
       }
 
       /* Navbar */
@@ -162,10 +186,41 @@
         padding: 0 30px 60px;
       }
 
+      .collections-stack {
+        display: block;
+      }
+
       .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 40px;
+      }
+
+      @media (max-width: 1280px) {
+        .products-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .products-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .collection-block {
+        margin-bottom: 55px;
+      }
+
+      .collection-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.4rem, 2.1vw, 2.1rem);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #1a1a1a;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.35);
       }
 
       /* Product Card - Premium Design */
@@ -1154,7 +1209,7 @@
 
       <!-- Products Grid -->
       <section class="products-container" id="products">
-        <div class="products-grid" id="productsGrid">
+        <div class="collections-stack" id="productsGrid">
           <!-- Products will be dynamically loaded here -->
         </div>
       </section>
@@ -1185,10 +1240,21 @@
         }
 
         const categories = ["Floral", "Oud", "Spicy", "Citrus", "Woody"];
+        const collections = ["50 ml collection", "35 ml collection", "Ouds"];
 
-        grid.innerHTML = products
-          .map(
-            (product, index) => `
+        grid.innerHTML = collections
+          .map((collectionName) => {
+            const sectionProducts = products.filter(
+              (product) => product.collection === collectionName,
+            );
+
+            if (sectionProducts.length === 0) {
+              return "";
+            }
+
+            const cardsHtml = sectionProducts
+              .map(
+                (product, index) => `
             <div class="product-card">
               <div class="product-image-wrapper">
                 <div class="product-gallery" data-product-id="${product.id}">
@@ -1198,13 +1264,13 @@
                     <div class="gallery-image ${
                       imgIndex === 0 ? "active" : ""
                     }" data-index="${imgIndex}" onclick="openLightbox(${
-                        product.id
-                      }, ${imgIndex})" style="cursor: pointer;">
+                      product.id
+                    }, ${imgIndex})" style="cursor: pointer;">
                       <img src="${img}" alt="${
                         product.name
                       }" class="product-image">
                     </div>
-                  `
+                  `,
                     )
                     .join("")}
                   <button class="gallery-arrow gallery-arrow-left" onclick="navigateGallery(${
@@ -1224,7 +1290,7 @@
                               onclick="changeGalleryImage(${
                                 product.id
                               }, ${imgIndex})"></button>
-                    `
+                    `,
                       )
                       .join("")}
                   </div>
@@ -1248,13 +1314,22 @@
                     product.id
                   })" class="btn btn-primary">Add to Cart</button>
                   <a href="${createWhatsAppLink(
-                    product.name
+                    product.name,
                   )}" target="_blank" class="btn btn-secondary">Order via WhatsApp</a>
                 </div>
               </div>
             </div>
-          `
-          )
+          `,
+              )
+              .join("");
+
+            return `
+              <section class="collection-block">
+                <h2 class="collection-title">${collectionName}</h2>
+                <div class="products-grid">${cardsHtml}</div>
+              </section>
+            `;
+          })
           .join("");
       }
 
@@ -1281,7 +1356,7 @@
       // Change gallery image function
       function changeGalleryImage(productId, imageIndex) {
         const gallery = document.querySelector(
-          `.product-gallery[data-product-id="${productId}"]`
+          `.product-gallery[data-product-id="${productId}"]`,
         );
         if (!gallery) return;
 
@@ -1299,7 +1374,7 @@
       // Navigate gallery with arrows
       function navigateGallery(productId, direction) {
         const gallery = document.querySelector(
-          `.product-gallery[data-product-id="${productId}"]`
+          `.product-gallery[data-product-id="${productId}"]`,
         );
         if (!gallery) return;
 
@@ -1351,7 +1426,7 @@
             (_, idx) =>
               `<button class="lightbox-dot ${
                 idx === imageIndex ? "active" : ""
-              }" onclick="goToLightboxImage(${idx})"></button>`
+              }" onclick="goToLightboxImage(${idx})"></button>`,
           )
           .join("");
 
@@ -1430,7 +1505,7 @@
       function createWhatsAppLink(productName) {
         const phoneNumber = "923295460498";
         const message = encodeURIComponent(
-          `Assalam o Alaikum! 👋\nMain aapki Zee Legacy website par perfumes dekh raha hoon. Mujhe apne liye ek perfume lena hai, ${productName}, thoda guide kar dein please — kaunsa best rahega aur order ka process kya hai?`
+          `Assalam o Alaikum! 👋\nMain aapki Zee Legacy website par perfumes dekh raha hoon. Mujhe apne liye ek perfume lena hai, ${productName}, thoda guide kar dein please — kaunsa best rahega aur order ka process kya hai?`,
         );
         return `https://wa.me/${phoneNumber}?text=${message}`;
       }
@@ -1468,8 +1543,8 @@
             (item) => `
             <div class="cart-item">
               <img src="${item.image}" alt="${
-              item.name
-            }" class="cart-item-image">
+                item.name
+              }" class="cart-item-image">
               <div class="cart-item-details">
                 <h3 class="cart-item-name">${item.name}</h3>
                 <p class="cart-item-price">${item.price}</p>
@@ -1487,7 +1562,7 @@
                 item.id
               })">Remove</button>
             </div>
-          `
+          `,
           )
           .join("");
 

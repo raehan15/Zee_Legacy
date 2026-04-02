@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -409,6 +409,14 @@
       <div class="nav-container">
         <div class="logo-container">
           <span class="brand-name">Zee Legacy Perfumes</span>
+
+          html { scrollbar-width: thin; scrollbar-color: var(--gold)
+          var(--light); } ::-webkit-scrollbar { width: 12px; height: 12px; }
+          ::-webkit-scrollbar-track { background: var(--light); }
+          ::-webkit-scrollbar-thumb { background: linear-gradient(180deg,
+          var(--gold-light) 0%, var(--gold) 100%); border-radius: 999px; border:
+          3px solid var(--light); } ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #d8b85a 0%, #b9902f 100%); }
         </div>
         <ul class="nav-menu">
           <li><a href="index.html">Home</a></li>
@@ -527,11 +535,11 @@
               <option value="Strong With You - PKR 2,599">
                 Strong With You - PKR 2,599
               </option>
-              <option value="Executive Aura - PKR 2,999">
-                Executive Aura - PKR 2,999
-              </option>
               <option value="Midnight Valor - PKR 2,799">
                 Midnight Valor - PKR 2,799
+              </option>
+              <option value="Executive Aura - PKR 2,999">
+                Executive Aura - PKR 2,999
               </option>
             </select>
           </div>
@@ -685,7 +693,7 @@
               </div>
               <div class="order-item-quantity">× ${item.quantity}</div>
               <div class="order-item-quantity" style="min-width: 100px; text-align: right;">${formatPrice(
-                itemTotal.toString()
+                itemTotal.toString(),
               )}</div>
             </div>
           `;
@@ -720,12 +728,12 @@
               } = ${formatPrice(
                 (
                   parseFloat(item.price.replace(/[^\d.-]/g, "")) * item.quantity
-                ).toString()
-              )}`
+                ).toString(),
+              )}`,
           )
           .join(" | ");
         document.getElementById("cartTotalInput").value = formatPrice(
-          total.toString()
+          total.toString(),
         );
       }
 
