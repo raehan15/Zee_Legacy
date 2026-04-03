@@ -67,8 +67,8 @@ const products = [
     name: "Inspired by Erba Pura",
     description:
       "A vibrant fruity-musky blend with a soft sweet trail that feels energetic and modern.",
-    originalPrice: "PKR 1,699",
-    price: "PKR 1,399",
+    originalPrice: "PKR 1,899",
+    price: "PKR 1,599",
     images: ["images/ep1.jpeg", "images/ep2.jpeg", "images/ep3.jpeg"],
   },
   {
@@ -97,8 +97,8 @@ const products = [
     name: "Inspired by Aventus Creed",
     description:
       "A bold fruity-woody character with smoky undertones, crafted for strong presence and longevity.",
-    originalPrice: "PKR 1,699",
-    price: "PKR 1,399",
+    originalPrice: "PKR 1,899",
+    price: "PKR 1,599",
     images: ["images/ac1.jpeg", "images/ac2.jpeg", "images/ac3.jpeg"],
   },
   {
