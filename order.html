@@ -439,23 +439,16 @@
       </div>
 
       <form
-        action="https://formsubmit.co/zeelegacyenterprises@gmail.com"
+        action="https://api.web3forms.com/submit"
         method="POST"
         class="order-form"
       >
-        <!-- FormSubmit Configuration -->
-        <input
-          type="hidden"
-          name="_subject"
-          value="New Order from Zee Legacy Perfumes!"
-        />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_template" value="box" />
-        <input
-          type="hidden"
-          name="_autoresponse"
-          value="Thank you for your order! We have received your request and will contact you shortly to confirm your order details. Your perfume will be delivered via Cash on Delivery (COD). - Zee Legacy Perfumes Team"
-        />
+        <!-- Web3Forms Configuration -->
+        <input type="hidden" name="access_key" value="fd62c450-c617-4f8b-a719-9885727e88b6" />
+        <input type="hidden" name="subject" value="New Order from Zee Legacy Perfumes!" />
+        <input type="hidden" name="redirect" value="https://zeelegacyperfumes.com" />
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+
         <input type="hidden" id="cartItemsInput" name="Cart Items" value="" />
         <input type="hidden" id="cartTotalInput" name="Order Total" value="" />
 

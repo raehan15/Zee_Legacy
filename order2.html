@@ -990,8 +990,7 @@
 
     <script>
       const PHONE = "923295460498";
-      const FORMSUBMIT_URL =
-        "https://formsubmit.co/ajax/zeelegacyenterprises@gmail.com";
+      const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
       /* ── Cart state ─────────────────────────────────────────── */
       let cartItems = JSON.parse(localStorage.getItem("zlCart2") || "[]");
@@ -1114,20 +1113,17 @@
         // Build WhatsApp link with full details
         buildWaLink(formData);
 
-        // Submit to FormSubmit (email) via AJAX
+        // Submit to Web3Forms (email) via AJAX
         try {
-          await fetch(FORMSUBMIT_URL, {
+          await fetch(WEB3FORMS_URL, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
             body: JSON.stringify({
-              _subject: "New Order – Zee Legacy Perfumes!",
-              _captcha: "false",
-              _template: "box",
-              _autoresponse:
-                "Thank you for your order! We'll confirm via WhatsApp before dispatch. – Zee Legacy Perfumes",
+              access_key: "fd62c450-c617-4f8b-a719-9885727e88b6",
+              subject: "New Order – Zee Legacy Perfumes!",
               "Full Name": `${formData.firstName} ${formData.lastName}`,
               Phone: formData.phone,
               Email: formData.email || "Not provided",
