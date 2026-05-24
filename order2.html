@@ -1143,12 +1143,10 @@
           console.error("Web3Forms Network Error:", err);
         }
 
-        // Clear cart, show success, open WhatsApp
+        // Clear cart and redirect to thank you page with WhatsApp URL parameter
         localStorage.removeItem("zlCart2");
-        document.getElementById("successOverlay").classList.add("show");
-        setTimeout(() => {
-          window.open(document.getElementById("waOrderBtn").href, "_blank");
-        }, 800);
+        const waUrl = document.getElementById("waOrderBtn").href;
+        window.location.href = `thank-you.html?wa=${encodeURIComponent(waUrl)}`;
       }
 
       /* ── Init ───────────────────────────────────────────────── */
