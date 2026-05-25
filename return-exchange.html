@@ -219,6 +219,106 @@
         fill: currentColor;
       }
 
+      /* ─── MOBILE MENU BUTTON ────────────────────────────────── */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: var(--dark);
+        transition: color 0.25s;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .menu-toggle:hover {
+        color: var(--gold);
+      }
+      .menu-toggle svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+      }
+
+      /* ─── MOBILE DRAWER & OVERLAY ───────────────────────────── */
+      .mobile-nav-drawer {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 300px;
+        height: 100%;
+        background: var(--white);
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 10px 0 40px rgba(0, 0, 0, 0.12);
+        padding: 30px;
+      }
+      .mobile-nav-drawer.open {
+        left: 0;
+      }
+
+      .mobile-nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 50px;
+      }
+      .mobile-nav-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+      }
+      .mobile-nav-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 2rem;
+        color: var(--mid);
+        transition: color 0.25s;
+        line-height: 1;
+      }
+      .mobile-nav-close:hover {
+        color: var(--gold);
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .mobile-nav-link {
+        text-decoration: none;
+        color: var(--dark);
+        font-size: 0.85rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: color 0.25s;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+      }
+      .mobile-nav-link:hover,
+      .mobile-nav-link.active {
+        color: var(--gold);
+      }
+
+      .mobile-nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s;
+      }
+      .mobile-nav-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
       .hero {
         background: var(--light);
         border-bottom: 1px solid rgba(0, 0, 0, 0.07);
@@ -363,18 +463,14 @@
           padding: 0 20px;
         }
         .nav-left {
-          gap: 16px;
+          display: none;
         }
-        .nav-link {
-          font-size: 0.68rem;
-          letter-spacing: 1.5px;
+        .menu-toggle {
+          display: flex;
         }
       }
 
       @media (max-width: 600px) {
-        .nav-left {
-          display: none;
-        }
         .brand-main {
           font-size: 1.25rem;
         }
@@ -393,6 +489,13 @@
 
     <nav class="navbar">
       <div class="nav-inner">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+
         <div class="nav-left">
           <a href="index.html" class="nav-link">Collection</a>
           <a href="order2.html" class="nav-link">Order</a>
@@ -431,6 +534,25 @@
         </div>
       </div>
     </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <div class="mobile-nav-header">
+        <div class="mobile-nav-brand">
+          <span class="brand-top">Est. 2024</span>
+          <span class="brand-main">Zee Legacy</span>
+          <span class="brand-sub">Perfumes</span>
+        </div>
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close Menu">&times;</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link">Collection</a>
+        <a href="order2.html" class="mobile-nav-link">Order</a>
+        <a href="shipping-info.html" class="mobile-nav-link">Shipping</a>
+        <a href="return-exchange.html" class="mobile-nav-link active">Returns</a>
+      </div>
+    </div>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
     <header class="hero">
       <h1 id="pageTitle">Return & Exchange Policy</h1>
@@ -581,6 +703,26 @@
       });
 
       setLanguage("en");
+
+      // Mobile Menu Logic
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuToggle = document.getElementById("menuToggle");
+        const mobileNavDrawer = document.getElementById("mobileNavDrawer");
+        const mobileNavClose = document.getElementById("mobileNavClose");
+        const mobileNavOverlay = document.getElementById("mobileNavOverlay");
+
+        if (menuToggle && mobileNavDrawer && mobileNavClose && mobileNavOverlay) {
+          const toggleDrawer = (open) => {
+            mobileNavDrawer.classList.toggle("open", open);
+            mobileNavOverlay.classList.toggle("open", open);
+            document.body.style.overflow = open ? "hidden" : "";
+          };
+
+          menuToggle.addEventListener("click", () => toggleDrawer(true));
+          mobileNavClose.addEventListener("click", () => toggleDrawer(false));
+          mobileNavOverlay.addEventListener("click", () => toggleDrawer(false));
+        }
+      });
     </script>
   </body>
 </html>
